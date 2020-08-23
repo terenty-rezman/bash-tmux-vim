@@ -1,6 +1,20 @@
 set nocompatible
-set number
+
+" ignore case when searching
+set ignorecase
+
+" when searching try to be smart about cases 
+set smartcase
+
+" highlight search results
 set hlsearch
+
+" makes search act like search in modern browsers
+set incsearch 
+
+" show line nubmers
+set number
+
 set tabstop=4
 
 set laststatus=2

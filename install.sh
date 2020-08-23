@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-#cp -r !(.git|.gitignore|README.md|install.sh) $HOME
+
+# install vundle from git - vim package manager
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 src=$HOME/bash-tmux-vim
 
