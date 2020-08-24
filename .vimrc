@@ -15,7 +15,10 @@ set incsearch
 " show line nubmers
 set number
 
-set tabstop=4
+set tabstop=2
+set sts=2
+set shiftwidth=2
+set et " expand tabs to spaces
 
 set laststatus=2
 
