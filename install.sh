@@ -42,6 +42,7 @@ function remove_dir_if_exist {
 }
 
 function backup_old_config {
+  # check if backup dir does not exist yet -> if not -> backup files
   if [[ ! -d $backup_dir ]] ; then
     echo -e "old config stored in $backup_dir\n"
     mkdir $backup_dir
@@ -76,15 +77,29 @@ function install_new_config {
   cp $src/.vimrc $HOME/
   ln -s -f .tmux/.tmux.conf $HOME/.tmux.conf
 
+  # make vim install plugins
   vim +PluginInstall +qall
 }
 
-echo -e "\ninstalling config files to $HOME...\n"
+function install {
+  echo -e "\ninstalling config files to $HOME...\n"
 
-backup_old_config
+  backup_old_config
 
-remove_old_config
+  remove_old_config
 
-install_new_config
+  install_new_config
 
-echo -e "\ndone!\n"
+  echo -e "\ndone!\n"
+}
+
+case "$1" in
+  "remove")
+    echo -e "\nremoving config..."
+    remove_old_config
+    echo -e "\ndone!\n"
+    ;;
+  *)
+    install
+    ;;
+esac
