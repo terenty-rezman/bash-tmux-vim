@@ -3,11 +3,11 @@
 src=$HOME/bash-tmux-vim
 backup_dir=$HOME/config_backup
 
-set -e
+set -e # terminate script on error
 
 function copy_file_if_exist {
-  if [[ -f $1 ]] ; then
-    if [[ -L $1 ]] ; then
+  if [[ -f $1 ]] ; then # if file exists
+    if [[ -L $1 ]] ; then # if a symlink
       cp -P $1 $2
     else
       cp $1 $2
@@ -16,8 +16,8 @@ function copy_file_if_exist {
 }
 
 function copy_dir_if_exist {
-  if [[ -d $1 ]] ; then
-    if [[ -L $1 ]] ; then
+  if [[ -d $1 ]] ; then # if dir exists
+    if [[ -L $1 ]] ; then # if a symlink
       cp -P $1 $2
     else
       cp -R $1 $2
@@ -26,14 +26,14 @@ function copy_dir_if_exist {
 }
 
 function remove_file_if_exist {
-  if [[ -f $1 ]] ; then
+  if [[ -f $1 ]] ; then # if file exists
     rm -f $1
   fi
 }
 
 function remove_dir_if_exist {
-  if [[ -d $1 ]] ; then
-    if [[ -L $1 ]] ; then
+  if [[ -d $1 ]] ; then # if file exists
+    if [[ -L $1 ]] ; then # if a symlink
       rm -f $1
     else
       rm -r -f $1
