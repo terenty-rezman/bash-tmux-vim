@@ -1,22 +1,90 @@
 #!/usr/bin/env bash
 
+src=$HOME/bash-tmux-vim
+backup_dir=$HOME/config_backup
+
 set -e
+
+function copy_file_if_exist {
+		if [[ -f $1 ]] ; then
+			if [[ -L $1 ]] ; then
+				cp -P $1 $2
+			else
+				cp $1 $2
+			fi
+		fi
+}
+
+function copy_dir_if_exist {
+		if [[ -d $1 ]] ; then
+			if [[ -L $1 ]] ; then
+				cp -P $1 $2
+			else
+				cp -R $1 $2
+			fi
+		fi
+}
+
+function remove_file_if_exist {
+		if [[ -f $1 ]] ; then
+				rm -f $1
+		fi
+}
+
+function remove_dir_if_exist {
+		if [[ -d $1 ]] ; then
+			if [[ -L $1 ]] ; then
+				rm -f $1
+			else
+				rm -r -f $1
+			fi
+		fi  
+}
+
+function backup_old_config {
+		if [[ ! -d $backup_dir ]] ; then
+				echo -e "old config stored in $backup_dir\n"
+				mkdir $backup_dir
+
+				copy_file_if_exist $HOME/.bashrc $backup_dir/
+				copy_dir_if_exist $HOME/.tmux/ $backup_dir/
+				copy_file_if_exist $HOME/.tmux.conf.local $backup_dir/
+				copy_dir_if_exist $HOME/.vim/ $backup_dir/
+				copy_file_if_exist $HOME/.vimrc $backup_dir/
+				copy_file_if_exist $HOME/.tmux.conf $backup_dir/
+		fi
+}
+
+function remove_old_config {
+		remove_file_if_exist $HOME/.bashrc
+		remove_dir_if_exist $HOME/.tmux
+		remove_file_if_exist $HOME/.tmux.conf.local 
+		remove_dir_if_exist $HOME/.vim
+		remove_file_if_exist $HOME/.vimrc
+		remove_file_if_exist $HOME/.tmux.conf
+}
+
+
+function install_new_config {
+		# install vundle from git - vim package manager
+		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
+		cp $src/.bashrc $HOME/
+		cp -r $src/.tmux/ $HOME/
+		cp $src/.tmux.conf.local $HOME/
+		cp -r $src/.vim/ $HOME/
+		cp $src/.vimrc $HOME/
+		ln -s -f .tmux/.tmux.conf $HOME/.tmux.conf
+		
+		vim +PluginInstall +qall
+}
 
 echo -e "\ninstalling config files to $HOME...\n"
 
-# install vundle from git - vim package manager
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+backup_old_config
 
-src=$HOME/bash-tmux-vim
+remove_old_config
 
-cp $src/.bashrc $HOME/
-cp -r $src/.tmux/ $HOME/
-cp $src/.tmux.conf.local $HOME/
-cp -r $src/.vim/ $HOME/
-cp $src/.vimrc $HOME/
-
-ln -s -f .tmux/.tmux.conf $HOME/.tmux.conf
-
-vim +PluginInstall +qall
+install_new_config
 
 echo -e "\ndone!\n"
