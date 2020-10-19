@@ -26,7 +26,7 @@ function copy_dir_if_exist {
 }
 
 function remove_file_if_exist {
-  if [[ -f $1 ]] ; then # if file exists
+  if [[ -e $1 ]] ; then # if file exists
     rm -f "$1"
   fi
 }
@@ -70,12 +70,12 @@ function install_new_config {
   # install vundle from git - vim package manager
   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-  cp "$src/.bashrc" "$HOME/"
-  cp -r "$src/.tmux/" "$HOME/"
-  cp "$src/.tmux.conf.local" "$HOME/"
+  ln -s -f "$src/.bashrc" "$HOME/.bashrc"
+  ln -s -f "$src/.tmux/" "$HOME/"
+  ln -s -f "$src/.tmux.conf.local" "$HOME/.tmux.conf.local"
   cp -r "$src/.vim/" "$HOME/"
-  cp "$src/.vimrc" "$HOME/"
-  ln -s -f .tmux/.tmux.conf "$HOME/.tmux.conf"
+  ln -s -f "$src/.vimrc" "$HOME/.vimrc"
+  ln -s -f "$src/.tmux/.tmux.conf" "$HOME/.tmux.conf"
 
   # make vim install plugins
   vim +PluginInstall +qall
